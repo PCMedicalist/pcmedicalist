@@ -53,11 +53,11 @@ ai_modules: initializing
 ```
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=YOUR_USERNAME&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0a0f1c" />
+  <img src="https://github-readme-stats.vercel.app/api?username=pcmedicalist&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0a0f1c" />
 </p>
 
 <p align="center">
-  <img src="https://streak-stats.demolab.com?user=YOUR_USERNAME&theme=tokyonight&hide_border=true&background=0a0f1c" />
+  <img src="https://streak-stats.demolab.com?user=pcmedicalist&theme=tokyonight&hide_border=true&background=0a0f1c" />
 </p>
 
 ---
