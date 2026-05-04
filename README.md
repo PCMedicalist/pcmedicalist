@@ -17,7 +17,7 @@ Here are some ideas to get you started:
 </p>
 
 <p align="center">
-  <img src="https://via.placeholder.com/900x300/0a0f1c/00f7ff?text=PCMedicalist+System+Interface" width="900"/>
+  <img src="hud.svg" width="900"/>
 </p>
 
 ---
