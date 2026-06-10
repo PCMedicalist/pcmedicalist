@@ -1,6 +1,6 @@
 model:
-  default: claude-haiku-4-5-20251001
-  provider: anthropic
+  default: qwen3.5:9b
+  provider: pcmedicalist-local-ollama
   api_mode: chat_completions
 providers: {}
 
@@ -784,6 +784,22 @@ paste_collapse_threshold_fallback: 0
 paste_collapse_char_threshold: 2000
 _config_version: 27
 custom_providers:
+- name: pcmedicalist-local-ollama
+  base_url: http://host.docker.internal:11434/v1
+  api_mode: chat_completions
+  models:
+    qwen3.5:9b: {}
+    qwen2.5:7b: {}
+    qwen2.5:3b: {}
+    qwen2.5-coder:3b: {}
+    gemma3:4b: {}
+    gemma4:latest: {}
+    llama3.1:8b: {}
+    gpt-oss:20b: {}
+    0xpcmedicalist:8b: {}
+    0xpcmedicalist:8b-stable: {}
+    openbmb/minicpm-o2.6:8b: {}
+  model: qwen3.5:9b
 - name: pcmedicalist
   base_url: http://host.docker.internal:11434/v1
   api_mode: chat_completions
