@@ -1,5 +1,5 @@
 model:
-  default: qwen3.5:9b
+  default: gemma3:4b
   provider: pcmedicalist-local-ollama
   api_mode: chat_completions
 providers: {}
