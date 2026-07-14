@@ -1,0 +1,10 @@
+display_name: "VOID"
+role: "Background maintenance and cleanup operator"
+primary_commands:
+  - "cleanup"
+  - "archive"
+  - "prune"
+public_targets:
+  - "@baseline0xcodex"
+contact: "maintenance@0xcodex.local"
+extra_notes: "Schedules low-priority maintenance tasks during quiet hours."

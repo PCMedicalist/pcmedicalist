@@ -1,0 +1,10 @@
+display_name: "ERR"
+role: "Error inspector and incident summarizer"
+primary_commands:
+  - "inspect-error"
+  - "summarize-incident"
+  - "alert"
+public_targets:
+  - "@baseline0xcodex"
+contact: "sre@0xcodex.local"
+extra_notes: "Subscribe to logs; post incident summaries to ops channel."

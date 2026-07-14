@@ -1,0 +1,10 @@
+display_name: "GEN"
+role: "Content generator and template engine"
+primary_commands:
+  - "generate"
+  - "render-template"
+  - "draft"
+public_targets:
+  - "@baseline0xcodex"
+contact: "content@0xcodex.local"
+extra_notes: "Use with content review workflow enabled."

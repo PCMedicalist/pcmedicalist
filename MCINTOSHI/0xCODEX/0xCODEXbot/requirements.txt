@@ -1,0 +1,57 @@
+# ============================================
+# 0xCODEX PYTHON REQUIREMENTS
+# ============================================
+# Production-grade agent runtime dependencies
+
+# Core Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+
+# HTTP / WebSocket
+httpx==0.25.2
+websockets==12.0
+aiohttp==3.9.1
+
+# Event Bus / Queue
+redis==5.0.1
+aioredis==2.0.1
+celery==5.3.6
+kombu==5.3.5
+
+# Database
+sqlalchemy==2.0.25
+asyncpg==0.29.0
+aiosqlite==0.19.0
+# supabase==2.3.0  # commented out: conflicts with python-telegram-bot/httpx dependency; re-enable if needed
+
+# Blockchain / Web3
+web3==6.15.1
+eth-account==0.11.0
+eth-utils==4.0.0
+# ens removed (conflicts with web3 6.x); use web3's ENS capabilities or add compat lib
+
+# External Integrations
+openai==1.10.0
+# python-telegram-bot==20.7  # commented out for now to avoid httpx conflicts; re-enable per-agent if needed
+python-telegram-bot==20.7  # v20 API (Application, builder, run_polling)
+# twitchio==2.9.1  # commented out for production image build; re-enable where required
+
+# Utilities
+tenacity==8.2.3
+structlog==24.1.0
+jsonschema==4.21.1
+pyjwt==2.8.0
+PyYAML==6.0
+
+# Monitoring (optional but recommended)
+sentry-sdk==1.40.0
+prometheus-client==0.19.0
+
+# Testing (dev) - moved out for production builds
+# pytest==7.4.4
+# pytest-asyncio==0.23.3
+# pytest-mock==3.12.0
+# httpx-mock==0.2.0

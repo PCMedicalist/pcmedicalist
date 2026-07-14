@@ -1,0 +1,10 @@
+display_name: "NULL"
+role: "No-op sentinel for offline/reserved operations"
+primary_commands:
+  - "noop"
+  - "health-check"
+  - "shelve"
+public_targets:
+  - "@baseline0xcodex"
+contact: "infra@0xcodex.local"
+extra_notes: "Used as a placeholder agent; safe to ignore in rollcalls."

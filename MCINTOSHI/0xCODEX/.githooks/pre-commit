@@ -1,0 +1,27 @@
+#!/bin/sh
+# Prevent committing .env files accidentally
+echo "Running pre-commit hook: blocking .env files"
+staged_files=$(git diff --cached --name-only --diff-filter=ACM)
+if [ -z "$staged_files" ]; then
+  exit 0
+fi
+blocked=0
+for f in $staged_files; do
+  # Normalize path
+  case "$f" in
+    *.env|*/.env|*.env.*)
+      # allow .env.example
+      if [ "$(basename "$f")" = ".env.example" ]; then
+        continue
+      fi
+      echo "ERROR: Attempting to commit an env file: $f"
+      blocked=1
+      ;;
+  esac
+done
+if [ "$blocked" -eq 1 ]; then
+  echo "Commit aborted. Remove sensitive .env files from the commit or add them to .gitignore." >&2
+  echo "To enable local commits with envs for testing, run: git reset HEAD <file>" >&2
+  exit 1
+fi
+exit 0

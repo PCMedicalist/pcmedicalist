@@ -1,0 +1,10 @@
+display_name: "EMO"
+role: "Emotion-aware assistant for empathetic messaging"
+primary_commands:
+  - "emote"
+  - "mood-check"
+  - "support"
+public_targets:
+  - "@baseline0xcodex"
+contact: "emo-team@0xcodex.local"
+extra_notes: "Handles empathetic responses and sentiment-aware interactions."

@@ -1,0 +1,10 @@
+display_name: "L1NE"
+role: "Line-oriented formatting and codeprettifier"
+primary_commands:
+  - "format"
+  - "lint"
+  - "fix-whitespace"
+public_targets:
+  - "@baseline0xcodex"
+contact: "devtools@0xcodex.local"
+extra_notes: "Runs safe autoformat; avoid on large diffs without review."

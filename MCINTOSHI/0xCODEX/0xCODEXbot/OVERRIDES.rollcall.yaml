@@ -1,0 +1,10 @@
+display_name: "0xCODEX"
+role: "Coordinator and orchestrator for the 0xCODEX agent suite"
+primary_commands:
+  - "rollcall"
+  - "status"
+  - "broadcast"
+public_targets:
+  - "@baseline0xcodex"
+contact: "ops@0xcodex.local"
+extra_notes: "Primary coordinator for scheduled rollcalls and broadcasts."

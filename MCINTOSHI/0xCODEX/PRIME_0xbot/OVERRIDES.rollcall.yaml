@@ -1,0 +1,10 @@
+display_name: "PRIME"
+role: "Primary decision assistant and strategic planner"
+primary_commands:
+  - "plan"
+  - "prioritize"
+  - "recommend"
+public_targets:
+  - "@baseline0xcodex"
+contact: "strategy@0xcodex.local"
+extra_notes: "Used for high-level planning and executive summaries."

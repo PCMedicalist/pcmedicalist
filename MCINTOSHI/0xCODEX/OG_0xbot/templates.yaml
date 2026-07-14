@@ -1,0 +1,75 @@
+templates:
+  start: |
+    Hello! 👋 I'm OG — the community steward for 0x.
+
+    Quick commands:
+    - `/help` — list commands
+    - `/lore` — OG's purpose and mission
+    - `/ask <question>` — ask OG a question
+
+    If you'd like an announcement posted, ask an admin to run `/announce <message>`.
+
+  help: |
+    Available commands (short):
+    - `/ask <question>` — Ask OG anything.
+    - `/lore` — Read OG's persona and responsibilities.
+    - `/state` — Current observed network state.
+    - `/stats` — Recent metrics snapshot.
+    - `/announce <message>` — Admin-only: create an announcement (approval required).
+
+    Use `/help <command>` for details.
+
+  announce:
+    body: |
+      Announcement Draft by @{{author}}:
+
+      {{message}}
+
+      This is an automated message from OG — it will be broadcast only after admin approval.
+
+      --
+      To broadcast, an admin must confirm with `/announce confirm {{draft_id}}`.
+    requires_admin_approval: true
+
+  ask: |
+    You asked: "{{question}}"
+
+    Answer:
+    {{answer}}
+
+    Notes: If OG cannot verify facts from authoritative sources, append: "I don't have that data right now — try again later or contact an admin."
+
+  codex: |
+    Codex lookup: `{{term}}`
+
+    Result:
+    {{codex_entry}}
+
+  state: |
+    Current state snapshot (as of {{timestamp}}):
+    - Finalized block: {{finalized_block}}
+    - Observed reorgs (24h): {{reorg_count}}
+
+    Source: authoritative telemetry. If data missing: "Data not available from source."
+
+  stats: |
+    Metrics (last 24h):
+    - Transactions processed: {{tx_count}}
+    - Alerts: {{alert_count}}
+    - Uptime: {{uptime}}
+
+  signal: |
+    Observation: {{event_summary}}
+
+    Evidence: {{evidence_snippet}}
+
+    If this is actionable and meets broadcast criteria, tag an admin for review.
+
+  decode: |
+    Decoded result:
+    {{decoded}}
+
+    If the payload may contain PII or keys, refuse: "I can't decode that — it may contain private data."
+
+  codex_scan: |
+    🔬 Full CODEX scan initiated. Results processing...

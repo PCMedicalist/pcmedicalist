@@ -1,0 +1,40 @@
+networks:
+  emo_0x_network_isolated:
+    driver: bridge
+
+services:
+  emo_redis_0x_isolated:
+    image: redis:7-alpine
+    container_name: emo_redis_0x_isolated
+    restart: unless-stopped
+    volumes:
+      - ./volumes/redis_data:/data
+    networks:
+      - emo_0x_network_isolated
+
+  emo_0xbot_isolated:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: 0xcodex-emo_0xbot:isolated
+    container_name: emo_0xbot_isolated
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      - HERMES_HOME=/app/.hermes
+      - EMO_SOUL_PATH=/app/IDENTITY.md
+    depends_on:
+      - emo_redis_0x_isolated
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ../shared:/app/shared
+      - ./hermes/profile:/app/.hermes
+    networks:
+      - emo_0x_network_isolated
+    stdin_open: true
+    tty: true
+
+volumes:
+  redis_data: {}

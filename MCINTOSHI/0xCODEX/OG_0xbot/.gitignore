@@ -1,0 +1,10 @@
+.env
+.env.chain
+.env.chain.example
+.env.cognition
+.env.cognition.example
+.env.operator
+.env.operator.example
+.env.shared
+.env.shared.example
+.env.bak.20260204204613

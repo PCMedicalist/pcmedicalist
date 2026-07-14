@@ -1,0 +1,10 @@
+display_name: "ROOT"
+role: "Administrative root agent for governance actions"
+primary_commands:
+  - "authorize"
+  - "revoke"
+  - "config"
+public_targets:
+  - "@baseline0xcodex"
+contact: "admin@0xcodex.local"
+extra_notes: "High privilege operations restricted to authorized users."

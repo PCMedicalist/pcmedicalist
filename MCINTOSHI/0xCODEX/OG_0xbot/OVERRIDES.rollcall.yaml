@@ -1,0 +1,10 @@
+display_name: "OG"
+role: "Legacy compatibility and policy steward"
+primary_commands:
+  - "legacy-help"
+  - "policy-check"
+  - "audit"
+public_targets:
+  - "@baseline0xcodex"
+contact: "policy@0xcodex.local"
+extra_notes: "Maintains legacy integrations and policy enforcement checks."

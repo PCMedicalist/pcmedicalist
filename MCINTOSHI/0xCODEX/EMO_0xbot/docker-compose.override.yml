@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  emo-hermes:
+    build:
+      context: ./EMO_0xbot/hermes
+      dockerfile: Dockerfile
+    image: mcintoshi/emo-hermes:local
+    container_name: emo-hermes-0x
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - HERMES_HOME=/home/emo_hermes/.hermes
+      - HERMES_PROFILE=emo_0xbot
+      - EMO_AGENT_NAME=emo_0xbot
+    volumes:
+      - ./hermes_em_home:/home/emo_hermes/.hermes
+    networks:
+      - emo_net
+    depends_on:
+      - redis
+    labels:
+      com.mcintoshi.agent: emo-hermes
+      com.mcintoshi.brand: EMO_0xbot
+
+  # Minimal stub for ollama_0xcodex so top-level compose references resolve during selective up
+  ollama_0xcodex:
+    image: alpine:3.18
+    container_name: ollama_0xcodex_stub
+    command: ["/bin/sh", "-c", "tail -f /dev/null"]
+    networks:
+      - emo_net
+    restart: unless-stopped
+
+networks:
+  emo_net:
+    external: false

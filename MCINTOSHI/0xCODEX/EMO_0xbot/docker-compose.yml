@@ -1,0 +1,45 @@
+services:
+  emo-agent:
+    build:
+      context: ../..
+      dockerfile: 0xCODEX/EMO_0xbot/Dockerfile
+    image: mcintoshi/emo-agent:local
+    networks:
+      - emo_net
+    container_name: em-agent-0x
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://emo-redis:6379
+      OLLAMA_API_URL: ${EMO_OLLAMA_API_URL:-http://host.docker.internal:11434/api}
+      OLLAMA_MODEL_NAME: ${EMO_OLLAMA_MODEL_NAME:-gemma3:4b}
+      OLLAMA_TEMPERATURE: ${EMO_OLLAMA_TEMPERATURE:-0.8}
+      OLLAMA_MAX_RETRIES: ${EMO_OLLAMA_MAX_RETRIES:-6}
+      OLLAMA_RATE_LIMIT_PER_MINUTE: ${EMO_OLLAMA_RATE_LIMIT_PER_MINUTE:-60}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_TOKEN: ${TELEGRAM_TOKEN:-}
+      TELEGRAM_PUBLIC_GROUP_CHAT_ID: ${TELEGRAM_PUBLIC_GROUP_CHAT_ID:-}
+      TELEGRAM_PUBLIC_CHANNEL: ${TELEGRAM_PUBLIC_CHANNEL:-}
+      TELEGRAM_PUBLIC_BROADCAST_TARGETS: ${TELEGRAM_PUBLIC_BROADCAST_TARGETS:-}
+    depends_on:
+      - emo-redis
+    volumes:
+      - ./workspace:/app/0xCODEX/EMO_0xbot/workspace
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    labels:
+      com.mcintoshi.agent: em
+      com.mcintoshi.brand: EMO_0xbot
+      com.mcintoshi.runtime: telegram-ollama-local
+
+  emo-redis:
+    image: redis:7-alpine
+    container_name: em-agent-redis
+    restart: unless-stopped
+    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+    volumes:
+      - emo_redis_data:/data
+
+volumes:
+  emo_redis_data:

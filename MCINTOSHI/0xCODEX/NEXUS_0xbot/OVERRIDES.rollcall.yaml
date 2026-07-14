@@ -1,0 +1,10 @@
+display_name: "NEXUS"
+role: "Integration hub and cross-agent router"
+primary_commands:
+  - "route"
+  - "sync"
+  - "resolve"
+public_targets:
+  - "@baseline0xcodex"
+contact: "integrations@0xcodex.local"
+extra_notes: "Manages inter-agent message routing and composite tasks."
