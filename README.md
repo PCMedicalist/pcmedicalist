@@ -152,7 +152,7 @@ https://pcmedicalist.com
 Twitch.tv/PCMedicalist
 
 [COMMUNITY]
-Discord (Private Network)
+https://discord.pcmedicalist.com
 ```
 
 ---
