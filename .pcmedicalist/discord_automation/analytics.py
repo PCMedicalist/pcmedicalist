@@ -46,11 +46,3 @@ if POST:
         print("TARGET NOT FOUND"); raise SystemExit(1)
     r = send_message(tid, md)
     print('POST ->', tid, '|', r.get('_error', 'ok'))
-    # Mirror to PCMedicalist Telegram group @baseline0xcodex (operator 2026-08-02).
-    try:
-        tg = subprocess.run(['hermes', 'send', '--to', 'telegram:@baseline0xcodex',
-                             '--subject', '📈 Guild Analytics', md],
-                            capture_output=True, text=True, timeout=60)
-        print('TG MIRROR ->', 'ok' if (tg.returncode == 0 and 'sent' in tg.stdout.lower()) else 'FAIL', tg.stdout.strip()[:120])
-    except Exception as e:
-        print('TG MIRROR exception:', e)
