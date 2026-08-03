@@ -1,0 +1,139 @@
+# Environment variables (TIER 1 SECRETS - NEVER COMMIT)
+.env
+.env.local
+.env.*.local
+.env.sanitized
+.env.docker
+.env.bak
+.env.bak.*
+.env.encrypted
+# Catch-all: ANY dot-env variant (incl. .env.retrobyte, .env.<persona>) is a secret.
+.env.*
+!.env.example
+secrets/
+*.secret
+*.credential
+
+# Build artifacts & cache (NEVER COMMIT)
+build/
+dist/
+*.egg-info/
+__pycache__/
+.cache
+node_modules/
+.next/
+out/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+.scanner-logs-worktree/
+.scanner-logs.lock
+0xCODEX/EMO_0xbot/backups/*/*.tar.gz
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Docker
+.dockerignore
+
+# Certificates
+*.pem
+*.key
+*.crt
+
+node_modules
+.env
+
+# Hardhat files
+/cache
+/artifacts
+
+# TypeChain files
+/typechain
+/typechain-types
+
+# solidity-coverage files
+/coverage
+/coverage.json
+
+# Hardhat Ignition default folder for deployments against a local node
+ignition/deployments/chain-31337
+
+# Environment variables (NEVER commit real keys)
+.env
+.env.local
+.env.*.local
+
+# PCMedicalist audit & state (LOCAL ONLY - DO NOT COMMIT)
+audit/
+state-snapshots/
+state.db
+state.db.wal
+*.db-journal
+sessions/
+memories/
+.restart_last_processed.json
+processes.json
+gateway_state.json
+exec-approvals.json
+voice_modes.json
+*.lock

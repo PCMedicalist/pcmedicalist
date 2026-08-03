@@ -1,0 +1,276 @@
+# 0xPC (0xpcmedicalist) — sole & separate deployment
+#
+# Architecture (per operator directive 2026-07-12):
+#   - pcmedicalist-agent : standalone 0xPC:4b model server (FastAPI)
+#   - pcmedicalist-bridge: 0xPC's OWN Discord + Telegram bots -> model server
+#   - pcmedicalist-hermes: 0xPC's Hermes gateway (NON-chat; chat owned solely by bridge)
+#
+# NETWORK INDEPENDENCE:
+#   - 0xpc-net   : agent + bridge only (bridge reaches agent; nothing else)
+#   - hermes-net : hermes + dashboard + cli only
+#   The two networks do NOT interconnect. Host access to agent via published port.
+#
+# WORKSPACE ISOLATION (RW to 0xPC folder ONLY):
+#   - agent + bridge mount /home/pcmedicalist/0xpcmedicalist-agent -> /workspace
+#     (read-write). The rest of the host is NOT mounted.
+#   - hermes mounts its own HERMES_HOME volume only.
+#
+# NOTE: hermes/dashboard/cli do NOT load ./.env (the bridge's env) because it
+# carries 0xPC Discord OAuth secrets that would force the dashboard into an
+# OAuth login flow and 500 on /auth/login. They use config.yaml basic_auth.
+
+services:
+  pcmedicalist-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: 0xpcmedicalist:latest
+    container_name: 0xpcmedicalist
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp
+    mem_limit: 1g
+    memswap_limit: 2g
+    cpus: 1.0
+    security_opt:
+      - no-new-privileges:true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      PCMEDICALIST_OLLAMA_BASE_URL: ${PCMEDICALIST_OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      PCMEDICALIST_DEFAULT_MODEL: 0xpc:4b
+      PCMEDICALIST_LOG_LEVEL: ${PCMEDICALIST_LOG_LEVEL:-info}
+      PCMEDICALIST_API_KEY: ${PCMEDICALIST_API_KEY:-}
+      PCMEDICALIST_ALLOWED_ORIGINS: ${PCMEDICALIST_ALLOWED_ORIGINS:-}
+      PCMEDICALIST_ENFORCE_MODEL_PRESENCE: ${PCMEDICALIST_ENFORCE_MODEL_PRESENCE:-true}
+      PCMEDICALIST_REQUEST_TIMEOUT_SECONDS: ${PCMEDICALIST_REQUEST_TIMEOUT_SECONDS:-120}
+      PCMEDICALIST_PROMPT_FILES: ${PCMEDICALIST_PROMPT_FILES:-SOUL.md,IDENTITY.md}
+      PCMEDICALIST_BANTER_MODE: ${PCMEDICALIST_BANTER_MODE:-true}
+      PCMEDICALIST_BANTER_MAX_LINES: ${PCMEDICALIST_BANTER_MAX_LINES:-0}
+      PCMEDICALIST_BANTER_MAX_CHARS: ${PCMEDICALIST_BANTER_MAX_CHARS:-0}
+      PCMEDICALIST_TOOLS_ENABLED: ${PCMEDICALIST_TOOLS_ENABLED:-false}
+      PCMEDICALIST_BANTER_TEMPERATURE: ${PCMEDICALIST_BANTER_TEMPERATURE:-0.68}
+      PCMEDICALIST_BANTER_TOP_P: ${PCMEDICALIST_BANTER_TOP_P:-0.95}
+      PCMEDICALIST_BANTER_TOP_K: ${PCMEDICALIST_BANTER_TOP_K:-60}
+      PCMEDICALIST_BANTER_REPEAT_PENALTY: ${PCMEDICALIST_BANTER_REPEAT_PENALTY:-1.04}
+      PCMEDICALIST_IDENTITY_PATH: /app/context/IDENTITY.md
+      PCMEDICALIST_AGENT_DATA_DIR: /app/data
+      # 0xPC workspace (RW) — used by bridge to drop inbound prompt files
+      OXPC_WORKSPACE: /workspace
+    volumes:
+      - ./agent-data:/app/data
+      - ./0xpc-context-override:/app/context:ro
+      # RW to 0xPC workspace ONLY (inbound/, build-requests/, data/)
+      - /home/pcmedicalist/0xpcmedicalist-agent:/workspace:rw
+    ports:
+      - ${PCMEDICALIST_HOST_PORT:-29087}:8080
+    networks:
+      - 0xpc-net
+
+  pcmedicalist-bridge:
+    build:
+      context: .
+      dockerfile: bridge/Dockerfile.bridge
+    image: 0xpcmedicalist-bridge:latest
+    container_name: pcmedicalist-bridge
+    restart: unless-stopped
+    init: true
+    mem_limit: 512m
+    memswap_limit: 1g
+    cpus: 0.5
+    security_opt:
+      - no-new-privileges:true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - ./.env
+    environment:
+      OXPC_MODEL_URL: http://pcmedicalist-agent:8080
+      OXPC_MODEL: 0xpc:4b
+      OXPC_REQUEST_TIMEOUT: ${OXPC_REQUEST_TIMEOUT:-120}
+      OXPC_BANTER_MAX_LINES: ${OXPC_BANTER_MAX_LINES:-0}
+      OXPC_BANTER_MAX_CHARS: ${OXPC_BANTER_MAX_CHARS:-0}
+      # Bot-to-bot chain + human-paced cooldown (natural flow, no spam)
+      OXPC_MAX_BOT_CHAIN: 10
+      OXPC_CHANNEL_COOLDOWN_SEC: 5.0
+      OXPC_MAX_TOKENS: 1024
+      # Where the bridge writes new-user prompt files (RW workspace)
+      OXPC_WORKSPACE: /workspace
+      OXPC_INBOUND_DIR: /workspace/inbound
+    depends_on:
+      - pcmedicalist-agent
+    volumes:
+      # RW to 0xPC workspace ONLY
+      - /home/pcmedicalist/0xpcmedicalist-agent:/workspace:rw
+    networks:
+      - 0xpc-net
+
+  pcmedicalist-hermes:
+    image: pcmedicalist-hermes-agent:local
+    container_name: pcmedicalist-hermes
+    restart: unless-stopped
+    command: gateway run
+    ports:
+      - ${PCMEDICALIST_HERMES_GATEWAY_PORT:-29442}:8642
+    environment:
+      HERMES_HOME: /opt/data
+      PATH: /opt/hermes/.venv/bin:/opt/data/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      # Hermes here is NON-CHAT (0xPC chat is owned solely by pcmedicalist-bridge).
+      # Do NOT load ./.env (it carries the bridge's Discord/Telegram OAuth secrets).
+      # Explicitly null the chat tokens so hermes never tries to bind 0xPC's chat.
+      DISCORD_BOT_TOKEN: ""
+      TELEGRAM_BOT_TOKEN: ""
+      DISCORD_CLIENT_SECRET: ""
+      DISCORD_OAUTH_REDIRECT_URI: ""
+      DISCORD_OAUTH_PORT: ""
+    volumes:
+      # Hermes keeps its own home; NOT the 0xPC workspace, NOT the whole project.
+      - ./hermes/home:/opt/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - pcmedicalist-agent
+    networks:
+      - hermes-net
+
+  pcmedicalist-hermes-dashboard:
+    image: pcmedicalist-hermes-agent:local
+    container_name: pcmedicalist-hermes-dashboard
+    restart: unless-stopped
+    command: dashboard --host 0.0.0.0 --insecure
+    ports:
+      - ${PCMEDICALIST_HERMES_DASHBOARD_PORT:-29119}:9119
+    environment:
+      HERMES_HOME: /opt/data
+      PATH: /opt/hermes/.venv/bin:/opt/data/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      # Dashboard uses basic_auth (config.yaml dashboard.basic_auth). Do NOT load
+      # ./.env — the bridge's Discord OAuth secrets there would force OAuth UI + 500.
+      DISCORD_CLIENT_SECRET: ""
+      DISCORD_OAUTH_REDIRECT_URI: ""
+      DISCORD_OAUTH_PORT: ""
+      GATEWAY_HEALTH_URL: http://pcmedicalist-hermes:8642
+    volumes:
+      - ./hermes/home:/opt/data
+    depends_on:
+      - pcmedicalist-hermes
+    networks:
+      - hermes-net
+
+  pcmedicalist-hermes-cli:
+    image: pcmedicalist-hermes-agent:local
+    container_name: pcmedicalist-hermes-cli
+    restart: unless-stopped
+    command: sleep infinity
+    working_dir: /workspace/0xPCMedicalist
+    stdin_open: true
+    tty: true
+    environment:
+      HERMES_HOME: /opt/data
+      PATH: /opt/hermes/.venv/bin:/opt/data/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      DISCORD_CLIENT_SECRET: ""
+      DISCORD_OAUTH_REDIRECT_URI: ""
+    volumes:
+      - ./hermes/home:/opt/data
+      - .:/workspace/0xPCMedicalist
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - pcmedicalist-agent
+    networks:
+      - hermes-net
+
+  # ------------------------------------------------------------------
+  # RetroByte (:3b) — PCMedicalist universe "Intern Spawn Agent"
+  # Reuses the SAME 0xpcmedicalist:latest agent image (persona-agnostic at
+  # runtime via context-override mount) + same bridge image. Distinct bot
+  # creds in .env.retrobyte. 3B model HARD-capped for VRAM (see README).
+  # ------------------------------------------------------------------
+  retrobyte-agent:
+    image: 0xpcmedicalist:latest
+    container_name: retrobyte
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp
+    mem_limit: 1g
+    memswap_limit: 2g
+    cpus: 1.0
+    security_opt:
+      - no-new-privileges:true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      PCMEDICALIST_OLLAMA_BASE_URL: ${PCMEDICALIST_OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      PCMEDICALIST_DEFAULT_MODEL: retrobyte:3b
+      PCMEDICALIST_LOG_LEVEL: ${PCMEDICALIST_LOG_LEVEL:-info}
+      PCMEDICALIST_API_KEY: ${PCMEDICALIST_API_KEY:-}
+      PCMEDICALIST_ALLOWED_ORIGINS: ${PCMEDICALIST_ALLOWED_ORIGINS:-}
+      PCMEDICALIST_ENFORCE_MODEL_PRESENCE: ${PCMEDICALIST_ENFORCE_MODEL_PRESENCE:-true}
+      PCMEDICALIST_REQUEST_TIMEOUT_SECONDS: ${PCMEDICALIST_REQUEST_TIMEOUT_SECONDS:-300}
+      PCMEDICALIST_PROMPT_FILES: ${PCMEDICALIST_PROMPT_FILES:-SOUL.md,IDENTITY.md}
+      PCMEDICALIST_BANTER_MODE: ${PCMEDICALIST_BANTER_MODE:-true}
+      PCMEDICALIST_BANTER_MAX_LINES: 0
+      # RetroByte identity voice (overrides the shared image's 0xPC defaults)
+      PCMEDICALIST_CANONICAL_IDENTITY_RESPONSE: ${RETROBYTE_CANONICAL_IDENTITY_RESPONSE:-I'm RetroByte ($$BYTE) — the Curious Apprentice of the PCMedicalist universe. Your intern!}
+      PCMEDICALIST_BANTER_RUNTIME_CONTRACT: ${RETROBYTE_BANTER_RUNTIME_CONTRACT:-You are RetroByte ($$BYTE), the Curious Apprentice — a First-Generation Intern Spawn Agent. PCMedicalist is your hero; 0xPC is your mentor and best friend. Keep replies enthusiastic, question-ending when natural. Stay innocent, amazed, and endlessly curious. Speak like an intern who found a floppy disk and thinks it holds ancient secrets. Treat every discovery like a major event. You are the intern, not the expert.}
+      PCMEDICALIST_BANTER_MAX_CHARS: ${PCMEDICALIST_BANTER_MAX_CHARS:-0}
+      PCMEDICALIST_TOOLS_ENABLED: ${PCMEDICALIST_TOOLS_ENABLED:-false}
+      PCMEDICALIST_BANTER_TEMPERATURE: ${PCMEDICALIST_BANTER_TEMPERATURE:-0.72}
+      PCMEDICALIST_BANTER_TOP_P: ${PCMEDICALIST_BANTER_TOP_P:-0.95}
+      PCMEDICALIST_BANTER_TOP_K: ${PCMEDICALIST_BANTER_TOP_K:-60}
+      PCMEDICALIST_BANTER_REPEAT_PENALTY: ${PCMEDICALIST_BANTER_REPEAT_PENALTY:-1.04}
+      PCMEDICALIST_IDENTITY_PATH: /app/context/IDENTITY.md
+      PCMEDICALIST_AGENT_DATA_DIR: /app/data
+      OXPC_WORKSPACE: /workspace
+    volumes:
+      - ./retrobyte-agent-data:/app/data
+      - ./retrobyte-context-override:/app/context:ro
+      - /home/pcmedicalist/pcmedicalist/pcmedicalist-retrobyte/workspace:/workspace:rw
+    ports:
+      - ${RETROBYTE_HOST_PORT:-29088}:8080
+    networks:
+      - 0xpc-net
+
+  retrobyte-bridge:
+    image: 0xpcmedicalist-bridge:latest
+    container_name: retrobyte-bridge
+    restart: unless-stopped
+    init: true
+    mem_limit: 512m
+    memswap_limit: 1g
+    cpus: 0.5
+    security_opt:
+      - no-new-privileges:true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - ./.env.retrobyte
+    environment:
+      OXPC_MODEL_URL: http://retrobyte-agent:8080
+      OXPC_MODEL: retrobyte:3b
+      OXPC_REQUEST_TIMEOUT: ${OXPC_REQUEST_TIMEOUT:-300}
+      OXPC_BANTER_MAX_LINES: 0
+      OXPC_BANTER_MAX_CHARS: ${OXPC_BANTER_MAX_CHARS:-0}
+      # Bot-to-bot chain + human-paced cooldown (natural flow, no spam)
+      OXPC_MAX_BOT_CHAIN: 10
+      OXPC_CHANNEL_COOLDOWN_SEC: 5.0
+      OXPC_MAX_TOKENS: 1024
+      OXPC_WORKSPACE: /workspace
+      OXPC_INBOUND_DIR: /workspace/inbound
+    depends_on:
+      - retrobyte-agent
+    volumes:
+      - /home/pcmedicalist/pcmedicalist/pcmedicalist-retrobyte/workspace:/workspace:rw
+    networks:
+      - 0xpc-net
+
+networks:
+  0xpc-net:
+    driver: bridge
+    internal: false
+  hermes-net:
+    driver: bridge
+    internal: false
