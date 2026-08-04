@@ -1,0 +1,141 @@
+# External override for 0x::CODEX fleet deployment
+# Project name: 0x-agents  (set via .env COMPOSE_PROJECT_NAME)
+# WRITTEN OUTSIDE /home/pcmedicalist/MCINTOSHI — no MCINTOSHI source modified.
+#
+# The base MCINTOSHI/0xCODEX/docker-compose.yml references a service
+# `ollama_0xcodex` (an nginx stub that wrongly returned 200 OK for ALL
+# requests) and defaults the LLM to OpenAI gpt-4/gpt-4o. This override:
+#   1. Replaces the broken stub with a WORKING nginx reverse proxy that
+#      forwards :11434 -> host.docker.internal:11434 (live host Ollama).
+#   2. Mounts a corrected nginx config from THIS dir (no MCINTOSHI edit).
+#   3. Switches every agent OFF gpt-4o -> LOCAL models.
+#      All general agents use the SMALLEST local model: 0xpc:3b (1.9 GB, Qwen2.5:3b base).
+#      EMO_0xbot is the exception: it uses 0xemo:3b, a DEDICATED identity-baked
+#      model cloned from 0xpc:3b with EMO's IDENTITY.md persona baked into the
+#      SYSTEM prompt (built on host via `ollama create 0xemo:3b`).
+#      PERSONA_LLM_PROVIDER=ollama forces the LOCAL path for every agent — NO OpenAI
+#      fallback. Elevated/heavy processing is routed to PCMedicalist out-of-band, not
+#      via OpenAI. Senpi was removed from OG; OG now consumes Privy/Bankr from the
+#      pcmedicalist-baseline app instead of carrying its own keys.
+#   4. Each agent keeps its own SOUL persona (handled in code from SOUL.md / IDENTITY.md);
+#      the local model is just the brain, the SOUL is the personality.
+#   5. Keeps redis + a fleet bridge network + healthchecks.
+
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  ollama_0xcodex:
+    image: nginx:alpine
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports: []   # do NOT publish 11434 on the host (host Ollama already owns it)
+    volumes:
+      - /home/pcmedicalist/0x-agents-deploy/ollama_proxy.nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://host.docker.internal:11434/api/tags"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # ----- LLM model assignment (local base Gemma only) -----
+  # Lightweight agents -> 0xpc:3b
+  # Persona-rich / reasoning agents -> 0xpc:3b (effective-4B MoE base model)
+  # All route through the proxy service "ollama_0xcodex" (no host port clash).
+  # PERSONA_LLM_PROVIDER=ollama forces the local path even if OPENAI key present.
+
+  0xcodexbot:
+    environment:
+      - PERSONA_LLM_PROVIDER=ollama
+      - PERSONA_LLM_MODEL=0xpc:3b
+      - OLLAMA_MODEL_NAME=0xpc:3b
+      - OLLAMA_API_URL=http://ollama_0xcodex:11434/api
+      - RESPONSE_ENGINE_LLM_PROVIDER=ollama
+
+  emo_0xbot:
+    environment:
+      - PERSONA_LLM_PROVIDER=ollama
+      - PERSONA_LLM_MODEL=0xemo:3b
+      - OLLAMA_MODEL_NAME=0xemo:3b
+      - OLLAMA_API_URL=http://ollama_0xcodex:11434/api
+      - REDIS_URL=redis://redis:6379
+
+  err_0xbot:
+    environment:
+      - PERSONA_LLM_PROVIDER=ollama
+      - PERSONA_LLM_MODEL=0xpc:3b
+      - OLLAMA_MODEL_NAME=0xpc:3b
+      - OLLAMA_API_URL=http://ollama_0xcodex:11434/api
+
+  gen_0xbot:
+    environment:
+      - PERSONA_LLM_PROVIDER=ollama
+      - PERSONA_LLM_MODEL=0xpc:3b
+      - OLLAMA_MODEL_NAME=0xpc:3b
+      - OLLAMA_API_URL=http://ollama_0xcodex:11434/api
+
+  l1ne_0xbot:
+    environment:
+      - PERSONA_LLM_PROVIDER=ollama
+      - PERSONA_LLM_MODEL=0xpc:3b
+      - OLLAMA_MODEL_NAME=0xpc:3b
+      - OLLAMA_API_URL=http://ollama_0xcodex:11434/api
+
+  nexus_0xbot:
+    environment:
+      - PERSONA_LLM_PROVIDER=ollama
+      - PERSONA_LLM_MODEL=0xpc:3b
+      - OLLAMA_MODEL_NAME=0xpc:3b
+      - OLLAMA_API_URL=http://ollama_0xcodex:11434/api
+
+  null_0xbot:
+    environment:
+      - PERSONA_LLM_PROVIDER=ollama
+      - PERSONA_LLM_MODEL=0xpc:3b
+      - OLLAMA_MODEL_NAME=0xpc:3b
+      - OLLAMA_API_URL=http://ollama_0xcodex:11434/api
+
+  og_0xbot:
+    environment:
+      - PERSONA_LLM_PROVIDER=ollama
+      - PERSONA_LLM_MODEL=0xpc:3b
+      - OLLAMA_MODEL_NAME=0xpc:3b
+      - OLLAMA_API_URL=http://ollama_0xcodex:11434/api
+
+  prime_0xbot:
+    environment:
+      - PERSONA_LLM_PROVIDER=ollama
+      - PERSONA_LLM_MODEL=0xpc:3b
+      - OLLAMA_MODEL_NAME=0xpc:3b
+      - OLLAMA_API_URL=http://ollama_0xcodex:11434/api
+
+  root_0xbot:
+    environment:
+      - PERSONA_LLM_PROVIDER=ollama
+      - PERSONA_LLM_MODEL=0xpc:3b
+      - OLLAMA_MODEL_NAME=0xpc:3b
+      - OLLAMA_API_URL=http://ollama_0xcodex:11434/api
+
+  void_0xbot:
+    environment:
+      - PERSONA_LLM_PROVIDER=ollama
+      - PERSONA_LLM_MODEL=0xpc:3b
+      - OLLAMA_MODEL_NAME=0xpc:3b
+      - OLLAMA_API_URL=http://ollama_0xcodex:11434/api
+
+networks:
+  default:
+    name: 0x-agents-net
+    driver: bridge
+
+volumes:
+  redis_data:
