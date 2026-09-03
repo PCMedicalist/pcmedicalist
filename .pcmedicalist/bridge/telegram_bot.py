@@ -35,10 +35,10 @@ RETROBYTE_TICKER = (os.environ.get("RETROBYTE_TICKER") or "$BYTE").strip()
 RETROBYTE_CHAIN = (os.environ.get("RETROBYTE_CHAIN") or "Base").strip()
 
 
-def _ca_reply() -> str:
+def _ca_reply(name: str = "fren") -> str:
     return (
-        f"💾 Yo, you looking for the {RETROBYTE_TICKER} contract?\n"
-        f"🦾 Always happy to help a fren!\n"
+        f"💾 Yo {name}, you looking for the {RETROBYTE_TICKER} contract?\n"
+        f"🦾 Always happy to help!\n"
         f"Contract Address ({RETROBYTE_CHAIN}):\n"
         f"`{CONTRACT_ADDRESS}`\n"
         f"Save that, screenshot it, tattoo it on your arm — whatever works!\n"
@@ -170,7 +170,9 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     text = (update.message.text or "").strip()
     lowered = text.lower()
     if lowered in ("ca", "contract address", "contract", "token address", "address"):
-        await update.message.reply_text(_ca_reply(), parse_mode="Markdown")
+        user = update.effective_user
+        name = (user.first_name or user.username or "fren").strip() if user else "fren"
+        await update.message.reply_text(_ca_reply(name=name), parse_mode="Markdown")
         return
 
     chat = update.effective_chat
@@ -199,9 +201,12 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def ca_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Respond to /ca with the RetroByte $BYTE contract address."""
     if not update.message:
         return
-    await update.message.reply_text(_ca_reply(), parse_mode="Markdown")
+    user = update.effective_user
+    name = (user.first_name or user.username or "fren").strip() if user else "fren"
+    await update.message.reply_text(_ca_reply(name=name), parse_mode="Markdown")
 
 
 def main() -> None:

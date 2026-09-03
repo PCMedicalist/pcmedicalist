@@ -39,9 +39,9 @@ RETROBYTE_TICKER = (os.environ.get("RETROBYTE_TICKER") or "$BYTE").strip()
 RETROBYTE_CHAIN = (os.environ.get("RETROBYTE_CHAIN") or "Base").strip()
 
 
-def _ca_reply() -> str:
+def _ca_reply(name: str = "fren") -> str:
     return (
-        f"💾 Yo, you looking for the {RETROBYTE_TICKER} contract?\n"
+        f"💾 Yo {name}, you looking for the {RETROBYTE_TICKER} contract?\n"
         f"🦾 Always happy to help a fren!\n"
         f"Contract Address ({RETROBYTE_CHAIN}):\n"
         f"`{CONTRACT_ADDRESS}`\n"
@@ -157,7 +157,8 @@ async def on_ready() -> None:
 
 @bot.command(name="ca", help="Show the RetroByte $BYTE contract address")
 async def ca_command(ctx: commands.Context) -> None:
-    await ctx.reply(_ca_reply())
+    name = (ctx.author.name or ctx.author.display_name or "fren").strip()
+    await ctx.reply(_ca_reply(name=name))
 
 
 @bot.event
@@ -189,7 +190,8 @@ async def on_message(message: discord.Message) -> None:
     # RetroByte contract address auto-respond (plain text, case-insensitive)
     lowered = content.lower()
     if lowered in ("ca", "contract address", "contract", "token address", "address"):
-        await message.reply(_ca_reply())
+        name = (message.author.name or message.author.display_name or "fren").strip()
+        await message.reply(_ca_reply(name=name))
         return
 
     chan_id = str(getattr(message.channel, "id", "") or message.channel)
