@@ -1,0 +1,18 @@
+# Bankr x402 skills project — local ignore (defense-in-depth)
+# Secrets: bankr config lives at ~/.bankr/config.json (outside this repo), never here.
+.env
+.env.*
+*.env
+
+# Receipts ledger (local durable state, never publish)
+.ledger/
+receipts.db
+receipts.jsonl
+
+# Bankr CLI artifacts
+.bankr/
+node_modules/
+
+# Build / logs
+dist/
+*.log

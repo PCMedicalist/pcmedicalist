@@ -1,0 +1,257 @@
+{
+  "network": "base",
+  "currency": "USDC",
+  "services": {
+    "pcmedicalist-skills-discovery": {
+      "description": "Catalog of all PCMedicalist platform-engineering skills: tiers, prices, public repo URLs.",
+      "price": 0.01,
+      "scheme": "exact",
+      "method": "GET",
+      "category": "engineering-index",
+      "tags": ["pcmedicalist", "skills", "catalog", "platform-engineering"],
+      "files": { "enabled": true, "roots": ["/x402/pcmedicalist-skills-discovery"], "read": true, "write": true, "delete": false },
+      "schema": {
+        "input": { "type": "object", "properties": {}, "required": [] },
+        "output": {
+          "type": "object",
+          "properties": {
+            "provider": { "type": "string", "description": "PCMedicalist" },
+            "tiers": { "type": "object", "description": "FREE / STANDARD / PRO tier map" },
+            "skills": { "type": "array", "description": "Array of { slug, tier, priceUsdc, topics }" },
+            "bundle": { "type": "object", "description": "PRO bundle reference" },
+            "publicRepos": { "type": "array", "description": "GitHub repo URLs" }
+          }
+        }
+      }
+    },
+    "pcmedicalist-security-fundamentals": {
+      "description": "26-topic security reference (access-control, auth, crypto, validation, supply-chain).",
+      "price": 0.5,
+      "scheme": "exact",
+      "method": "GET",
+      "category": "security",
+      "tags": ["pcmedicalist", "security", "auth", "crypto"],
+      "files": { "enabled": true, "roots": ["/x402/pcmedicalist-security-fundamentals"], "read": true, "write": true, "delete": false },
+      "schema": {
+        "input": { "type": "object", "properties": {}, "required": [] },
+        "output": {
+          "type": "object",
+          "properties": {
+            "skill": { "type": "string", "description": "Full SKILL.md body for this skill" },
+            "license": { "type": "string", "description": "CC-BY-4.0" }
+          }
+        }
+      }
+    },
+    "pcmedicalist-database-deep-dive": {
+      "description": "PostgreSQL/Redis operational depth: indexing, N+1, pooling, migrations, locking, sharding.",
+      "price": 0.5,
+      "scheme": "exact",
+      "method": "GET",
+      "category": "data",
+      "tags": ["pcmedicalist", "database", "postgres", "redis"],
+      "files": { "enabled": true, "roots": ["/x402/pcmedicalist-database-deep-dive"], "read": true, "write": true, "delete": false },
+      "schema": {
+        "input": { "type": "object", "properties": {}, "required": [] },
+        "output": {
+          "type": "object",
+          "properties": {
+            "skill": { "type": "string", "description": "Full SKILL.md body for this skill" },
+            "license": { "type": "string", "description": "CC-BY-4.0" }
+          }
+        }
+      }
+    },
+    "pcmedicalist-distributed-patterns": {
+      "description": "Sagas, distributed locks, idempotency, leader election, 2PC, partition handling.",
+      "price": 0.4,
+      "scheme": "exact",
+      "method": "GET",
+      "category": "architecture",
+      "tags": ["pcmedicalist", "distributed", "consensus", "sagas"],
+      "files": { "enabled": true, "roots": ["/x402/pcmedicalist-distributed-patterns"], "read": true, "write": true, "delete": false },
+      "schema": {
+        "input": { "type": "object", "properties": {}, "required": [] },
+        "output": {
+          "type": "object",
+          "properties": {
+            "skill": { "type": "string", "description": "Full SKILL.md body for this skill" },
+            "license": { "type": "string", "description": "CC-BY-4.0" }
+          }
+        }
+      }
+    },
+    "pcmedicalist-resilience-engineering": {
+      "description": "Circuit breakers, bulkheads, backpressure, timeouts, retries, chaos drills, error budgets.",
+      "price": 0.4,
+      "scheme": "exact",
+      "method": "GET",
+      "category": "reliability",
+      "tags": ["pcmedicalist", "resilience", "stability", "backpressure"],
+      "files": { "enabled": true, "roots": ["/x402/pcmedicalist-resilience-engineering"], "read": true, "write": true, "delete": false },
+      "schema": {
+        "input": { "type": "object", "properties": {}, "required": [] },
+        "output": {
+          "type": "object",
+          "properties": {
+            "skill": { "type": "string", "description": "Full SKILL.md body for this skill" },
+            "license": { "type": "string", "description": "CC-BY-4.0" }
+          }
+        }
+      }
+    },
+    "pcmedicalist-caching-strategies": {
+      "description": "Cache hierarchies, invalidation, CDN/edge patterns, stampede protection, consistency.",
+      "price": 0.4,
+      "scheme": "exact",
+      "method": "GET",
+      "category": "performance",
+      "tags": ["pcmedicalist", "caching", "redis", "performance"],
+      "files": { "enabled": true, "roots": ["/x402/pcmedicalist-caching-strategies"], "read": true, "write": true, "delete": false },
+      "schema": {
+        "input": { "type": "object", "properties": {}, "required": [] },
+        "output": {
+          "type": "object",
+          "properties": {
+            "skill": { "type": "string", "description": "Full SKILL.md body for this skill" },
+            "license": { "type": "string", "description": "CC-BY-4.0" }
+          }
+        }
+      }
+    },
+    "pcmedicalist-http-protocol": {
+      "description": "HTTP/1.1-3 semantics, status codes, headers, methods, content-negotiation, connections.",
+      "price": 0.4,
+      "scheme": "exact",
+      "method": "GET",
+      "category": "protocol",
+      "tags": ["pcmedicalist", "http", "api", "rest"],
+      "files": { "enabled": true, "roots": ["/x402/pcmedicalist-http-protocol"], "read": true, "write": true, "delete": false },
+      "schema": {
+        "input": { "type": "object", "properties": {}, "required": [] },
+        "output": {
+          "type": "object",
+          "properties": {
+            "skill": { "type": "string", "description": "Full SKILL.md body for this skill" },
+            "license": { "type": "string", "description": "CC-BY-4.0" }
+          }
+        }
+      }
+    },
+    "pcmedicalist-networking-infra": {
+      "description": "DNS, reverse proxies, subnets, NAT, service meshes, single-host-to-cloud topology.",
+      "price": 0.4,
+      "scheme": "exact",
+      "method": "GET",
+      "category": "infrastructure",
+      "tags": ["pcmedicalist", "networking", "dns", "vpc"],
+      "files": { "enabled": true, "roots": ["/x402/pcmedicalist-networking-infra"], "read": true, "write": true, "delete": false },
+      "schema": {
+        "input": { "type": "object", "properties": {}, "required": [] },
+        "output": {
+          "type": "object",
+          "properties": {
+            "skill": { "type": "string", "description": "Full SKILL.md body for this skill" },
+            "license": { "type": "string", "description": "CC-BY-4.0" }
+          }
+        }
+      }
+    },
+    "pcmedicalist-infrastructure-ops": {
+      "description": "PM2/nginx deploys, rsync delivery, GitHub Actions CI, secret hygiene, scale target practice.",
+      "price": 0.5,
+      "scheme": "exact",
+      "method": "GET",
+      "category": "operations",
+      "tags": ["pcmedicalist", "infrastructure", "devops", "kubernetes"],
+      "files": { "enabled": true, "roots": ["/x402/pcmedicalist-infrastructure-ops"], "read": true, "write": true, "delete": false },
+      "schema": {
+        "input": { "type": "object", "properties": {}, "required": [] },
+        "output": {
+          "type": "object",
+          "properties": {
+            "skill": { "type": "string", "description": "Full SKILL.md body for this skill" },
+            "license": { "type": "string", "description": "CC-BY-4.0" }
+          }
+        }
+      }
+    },
+    "pcmedicalist-messaging-semantics": {
+      "description": "Message-queue, pub/sub, event-driven and dead-letter semantics with delivery guarantees.",
+      "price": 0.4,
+      "scheme": "exact",
+      "method": "GET",
+      "category": "messaging",
+      "tags": ["pcmedicalist", "messaging", "queue", "kafka"],
+      "files": { "enabled": true, "roots": ["/x402/pcmedicalist-messaging-semantics"], "read": true, "write": true, "delete": false },
+      "schema": {
+        "input": { "type": "object", "properties": {}, "required": [] },
+        "output": {
+          "type": "object",
+          "properties": {
+            "skill": { "type": "string", "description": "Full SKILL.md body for this skill" },
+            "license": { "type": "string", "description": "CC-BY-4.0" }
+          }
+        }
+      }
+    },
+    "pcmedicalist-event-driven-architecture": {
+      "description": "Event sourcing, CQRS, streaming topology, choreography vs orchestration.",
+      "price": 0.4,
+      "scheme": "exact",
+      "method": "GET",
+      "category": "architecture",
+      "tags": ["pcmedicalist", "event-driven", "cqrs", "event-sourcing"],
+      "files": { "enabled": true, "roots": ["/x402/pcmedicalist-event-driven-architecture"], "read": true, "write": true, "delete": false },
+      "schema": {
+        "input": { "type": "object", "properties": {}, "required": [] },
+        "output": {
+          "type": "object",
+          "properties": {
+            "skill": { "type": "string", "description": "Full SKILL.md body for this skill" },
+            "license": { "type": "string", "description": "CC-BY-4.0" }
+          }
+        }
+      }
+    },
+    "pcmedicalist-platform-engineering-index": {
+      "description": "Master index routing topics to all PCMedicalist platform-engineering skills.",
+      "price": 0.01,
+      "scheme": "exact",
+      "method": "GET",
+      "category": "engineering-index",
+      "tags": ["pcmedicalist", "index", "platform-engineering", "reference"],
+      "files": { "enabled": true, "roots": ["/x402/pcmedicalist-platform-engineering-index"], "read": true, "write": true, "delete": false },
+      "schema": {
+        "input": { "type": "object", "properties": {}, "required": [] },
+        "output": {
+          "type": "object",
+          "properties": {
+            "skill": { "type": "string", "description": "Full SKILL.md body for this skill" },
+            "license": { "type": "string", "description": "CC-BY-4.0" }
+          }
+        }
+      }
+    },
+    "pcmedicalist-skills-pro": {
+      "description": "PRO bundle: all 11 PCMedicalist platform-engineering skills in one catalog call.",
+      "price": 4.0,
+      "scheme": "exact",
+      "method": "GET",
+      "category": "engineering-index",
+      "tags": ["pcmedicalist", "pro", "bundle", "platform-engineering"],
+      "files": { "enabled": true, "roots": ["/x402/pcmedicalist-skills-pro"], "read": true, "write": true, "delete": false },
+      "schema": {
+        "input": { "type": "object", "properties": {}, "required": [] },
+        "output": {
+          "type": "object",
+          "properties": {
+            "provider": { "type": "string", "description": "PCMedicalist" },
+            "tier": { "type": "string", "description": "PRO" },
+            "skills": { "type": "array", "description": "Catalog of all 11 skills with endpoint + repo URLs" }
+          }
+        }
+      }
+    }
+  }
+}
