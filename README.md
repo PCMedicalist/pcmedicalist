@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img src="https://githubusercontent.com/hud.svg" width="900" alt="Interface HUD" />
+  <img src="hud.svg" width="900" alt="Interface HUD" />
 </p>
 
 ---
