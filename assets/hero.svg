@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="340" viewBox="0 0 900 340" role="img" aria-label="PCMedicalist sovereign systems mission control banner">
+  <defs>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="scan" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#00f7ff" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#00f7ff" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#00f7ff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00f7ff"/>
+      <stop offset="100%" stop-color="#7c8cff"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="900" height="340" fill="#0a0f1c"/>
+  <rect x="8" y="8" width="884" height="324" rx="12" fill="none" stroke="url(#edge)" stroke-width="2" filter="url(#glow)"/>
+  <rect x="18" y="18" width="864" height="304" rx="8" fill="none" stroke="#00f7ff" stroke-opacity="0.25" stroke-width="1"/>
+
+  <g font-family="monospace" text-anchor="middle">
+    <text x="450" y="64" fill="#00f7ff" font-size="44" font-weight="bold" letter-spacing="6" filter="url(#glow)">PC MEDICALIST</text>
+    <text x="450" y="92" fill="#7c8cff" font-size="15" letter-spacing="3">SOVEREIGN SYSTEMS // AUTONOMOUS ENGINEERING</text>
+  </g>
+
+  <g font-family="monospace" text-anchor="middle" font-size="13" letter-spacing="2">
+    <rect x="252" y="112" width="88" height="28" rx="6" fill="#00f7ff" fill-opacity="0.10" stroke="#00f7ff" stroke-width="1.2"/>
+    <text x="296" y="131" fill="#c9d6ff">BUILD</text>
+    <rect x="352" y="112" width="88" height="28" rx="6" fill="#00f7ff" fill-opacity="0.10" stroke="#00f7ff" stroke-width="1.2"/>
+    <text x="396" y="131" fill="#c9d6ff">SECURE</text>
+    <rect x="452" y="112" width="88" height="28" rx="6" fill="#00f7ff" fill-opacity="0.10" stroke="#00f7ff" stroke-width="1.2"/>
+    <text x="496" y="131" fill="#c9d6ff">SHIP</text>
+    <rect x="552" y="112" width="88" height="28" rx="6" fill="#00f7ff" fill-opacity="0.10" stroke="#00f7ff" stroke-width="1.2"/>
+    <text x="596" y="131" fill="#c9d6ff">SCALE</text>
+  </g>
+
+  <g stroke="#00f7ff" stroke-opacity="0.35" stroke-width="1" fill="none">
+    <line x1="450" y1="160" x2="150" y2="218"/>
+    <line x1="450" y1="160" x2="350" y2="218"/>
+    <line x1="450" y1="160" x2="550" y2="218"/>
+    <line x1="450" y1="160" x2="750" y2="218"/>
+  </g>
+  <circle cx="450" cy="160" r="12" fill="#00f7ff" filter="url(#glow)"/>
+  <text x="450" y="152" text-anchor="middle" font-family="monospace" font-size="9" fill="#0a0f1c">PCM</text>
+
+  <g font-family="monospace" text-anchor="middle">
+    <g>
+      <rect x="90" y="218" width="120" height="42" rx="8" fill="#0a0f1c" stroke="#00f7ff" stroke-width="1.4"/>
+      <text x="150" y="238" fill="#00f7ff" font-size="15" font-weight="bold" letter-spacing="2">APPS</text>
+      <text x="150" y="253" fill="#7c8cff" font-size="8">WEB + MOBILE</text>
+    </g>
+    <g>
+      <rect x="290" y="218" width="120" height="42" rx="8" fill="#0a0f1c" stroke="#00f7ff" stroke-width="1.4"/>
+      <text x="350" y="238" fill="#00f7ff" font-size="15" font-weight="bold" letter-spacing="2">AGENTS</text>
+      <text x="350" y="253" fill="#7c8cff" font-size="8">AUTONOMOUS</text>
+    </g>
+    <g>
+      <rect x="490" y="218" width="120" height="42" rx="8" fill="#0a0f1c" stroke="#00f7ff" stroke-width="1.4"/>
+      <text x="550" y="238" fill="#00f7ff" font-size="15" font-weight="bold" letter-spacing="2">x402</text>
+      <text x="550" y="253" fill="#7c8cff" font-size="8">USDC / BASE</text>
+    </g>
+    <g>
+      <rect x="690" y="218" width="120" height="42" rx="8" fill="#0a0f1c" stroke="#00f7ff" stroke-width="1.4"/>
+      <text x="750" y="238" fill="#00f7ff" font-size="15" font-weight="bold" letter-spacing="2">EDGE</text>
+      <text x="750" y="253" fill="#7c8cff" font-size="8">SELF HOSTED</text>
+    </g>
+  </g>
+
+  <g stroke="#00f7ff" stroke-opacity="0.55" fill="none">
+    <path d="M90 288 H810" stroke-dasharray="2 6"/>
+    <circle cx="90" cy="288" r="3" fill="#00f7ff"/>
+    <circle cx="810" cy="288" r="3" fill="#00f7ff"/>
+  </g>
+  <text x="450" y="293" text-anchor="middle" font-family="monospace" font-size="12" fill="#c9d6ff" letter-spacing="1">NODE: ACTIVE  |  LOCATION: TEXAS  |  UPTIME: ONLINE</text>
+
+  <rect x="18" y="18" width="864" height="304" rx="8" fill="url(#scan)" pointer-events="none"/>
+</svg>
